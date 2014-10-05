@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour {
 	public Vector3 boundsCenterOffset; //Distance of bounds.center from position
 
 	void Awake() {
-				InvokeRepeating ("CheckOffScreen", 0f, 2f);
+				InvokeRepeating ("CheckOffscreen", 0f, 2f);
 		}
 
 	//Update is called once per frame
