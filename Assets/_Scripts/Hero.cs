@@ -5,17 +5,25 @@ public class Hero : MonoBehaviour {
 
 	static public Hero S; //S for singleton
 
+	public float gameRestartDelay = 2f;
+
 	//These fields control the movement of the ship
 	public float speed = 30;
 	public float rollMult = -45;
 	public float pitchMult = 30;
 
 	//Ship status information
-	public float shieldLevel = 1;
+	[SerializeField]
+	private float _shieldLevel = 1;
 
 	public bool _____________;
 
 	public Bounds bounds;
+
+	//Declare a new delegate type WeaponFireDelegate
+	public delegate void WeaponFireDelegate();
+	// Create a WeaponFireDelegate field named fireDelegate.
+	public WeaponFireDelegate fireDelegate;
 
 	void Awake(){
 				S = this; //Set the singleton
@@ -44,6 +52,13 @@ public class Hero : MonoBehaviour {
 				}
 		//Rotate the ship to make it feel more dynamic
 		transform.rotation = Quaternion.Euler (yAxis * pitchMult, xAxis * rollMult, 0);
+
+		//Use the fireDelegate to fire Weapons
+		//First, make sure the Axis("Jump") button is pressed
+		//Then ensure that fireDelegate isn't null to avoid an error
+		if (Input.GetAxis ("Jump") == 1 && fireDelegate != null) {
+						fireDelegate ();
+				}
 	}
 
 	//This variable holds a reference to the last triggering GameObject
@@ -72,6 +87,20 @@ public class Hero : MonoBehaviour {
 				} else {
 						//Otherwise announce the original gameObject
 						print ("Triggered: " + other.gameObject.name);
+				}
+		}
+public float shieldLevel {
+				get {
+						return(_shieldLevel);
+				}
+				set {
+						_shieldLevel = Mathf.Min (value, 4);
+						//If the shield is going to be set to less than zero
+						if (value < 0) {
+								Destroy (this.gameObject);
+				//Tell Main.S to restart the game after a delay
+				Main.S.DelayedRestart(gameRestartDelay);
+			}
 				}
 		}
 }

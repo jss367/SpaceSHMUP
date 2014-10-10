@@ -188,8 +188,8 @@ public class Utils : MonoBehaviour {
 
 	//============================== Transform Functions=================================
 
-	//This function will iteratively climb up the transform.parent tree until it either finds a parent with a tag != "Untagged"
-	//or no parent 
+	//This function will iteratively climb up the transform.parent tree until it either finds a parent with
+	// a tag != "Untagged" or no parent 
 	public static GameObject FindTaggedParent(GameObject go){
 				//If this gameObject has a tag
 				if (go.tag != "Untagged") {
