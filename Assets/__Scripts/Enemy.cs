@@ -3,31 +3,31 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
-	public float speed = 10f; //The speed in m/s
-	public float fireRate = 0.3f; // Seconds per shot (Unused)
-	public float health = 10;
-	public int score = 100; //Points earned for destroying this
+	public float		speed = 10f; //The speed in m/s
+	public float		fireRate = 0.3f; // Seconds per shot (Unused)
+	public float		health = 10;
+	public int			score = 100; //Points earned for destroying this
 
-	public int showDamageForFrames = 2; // # of frames to show damage
+	public int			showDamageForFrames = 2; // # of frames to show damage
+	public float		powerUpDropChance = 1f; // CHance to drop a power-up
 
 	public bool _________________;
 
-	public Color[] originalColors;
-	public Material[] materials; //All the materials of this & its children
-	public int remainingDamageFrames = 0; // Damage frames left
+	public Color[]		originalColors;
+	public Material[]	materials; //All the Materials of this & its children
+	public int			remainingDamageFrames = 0; // Damage frames left
 
 	public Bounds bounds; //The Bounds of this and its children
 	public Vector3 boundsCenterOffset; //Distance of bounds.center from position
 
 	void Awake() {
-				
 		materials = Utils.GetAllMaterials (gameObject);
 		originalColors = new Color[materials.Length];
 		for (int i = 0; i < materials.Length; i++) {
 						originalColors [i] = materials [i].color;
 				}
-		InvokeRepeating ("CheckOffscreen", 0f, 2f);
-	}
+				InvokeRepeating ("CheckOffscreen", 0f, 2f);
+		}
 
 	//Update is called once per frame
 	void Update(){
@@ -77,30 +77,34 @@ public class Enemy : MonoBehaviour {
 						}
 				}
 		}
-	void onCollisionEnter( Collision coll) {
+
+	void OnCollisionEnter (Collision coll) {
 				GameObject other = coll.gameObject;
 				switch (other.tag) {
 				case "ProjectileHero":
 						Projectile p = other.GetComponent<Projectile> ();
-			//Enemies don't take damage unless they're onscreen
-			//This stops the player from shooting the before they are visible
+			// Enemies don't take damage unless they're onscreen
+			// This stops the player from shooting them before they are visible
 						bounds.center = transform.position + boundsCenterOffset;
 						if (bounds.extents == Vector3.zero || Utils.ScreenBoundsCheck (bounds, BoundsTest.offScreen) != Vector3.zero) {
 								Destroy (other);
 								break;
 						}
-			//Hurt this enemy
+			// Hurt this Enemy
 			ShowDamage();
-			//Get the damage amount from the Projectile.type & Main.W_DEFS
+			// Get the damage amount from the Projectile.type & Main.W_DEFS
 						health -= Main.W_DEFS [p.type].damageOnHit;
 						if (health <= 0) {
-								//Destroy this enemy
+				// Tell the Main singleton that this ship has been destroyed
+				Main.S.ShipDestroyed(this);
+								// Destroy this Enemy
 								Destroy (this.gameObject);
 						}
 						Destroy (other);
 						break;
 				}
 		}
+
 	void ShowDamage() {
 				foreach (Material m in materials) {
 						m.color = Color.red;
@@ -112,6 +116,4 @@ public class Enemy : MonoBehaviour {
 			materials[i].color = originalColors[i];
 		}
 	}
-
-
 }

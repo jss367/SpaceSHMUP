@@ -19,9 +19,7 @@ public class Projectile : MonoBehaviour {
 				//Test to see whether this has passed off screen every 2 seconds
 				InvokeRepeating ("CheckOffscreen", 2f, 2f);
 		}
-
-
-
+	
 
 		public void	SetType ( WeaponType eType) {
 				//set the type

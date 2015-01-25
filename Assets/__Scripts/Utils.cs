@@ -215,7 +215,7 @@ public class Utils : MonoBehaviour {
 
 	//Returns a list of all Materials on this GameObject or its children
 	static public Material[] GetAllMaterials(GameObject go) {
-				List<Material> mats = new List<Material> ();
+		List<Material> mats = new List<Material> ();
 				if (go.renderer != null) {
 						mats.Add (go.renderer.material);
 				}
